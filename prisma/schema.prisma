@@ -26,7 +26,7 @@ model Buyer {
   vatId     String   @map("vat_id")
   email     String
   phone     String?
-  Order     Order[]
+  orders    Order[]
 
   @@unique([firstName, lastName, vatId, email])
   @@map("buyers")
@@ -41,19 +41,19 @@ model Product {
   memberDiscount       Float       @map("member_discount")
   athleteDiscount      Float       @map("athlete_discount")
   personalizationPrice Float       @map("personalization_price")
-  OrderItems           OrderItem[]
+  orderItems           OrderItem[]
 
   @@map("products")
 }
 
 model Order {
-  id        Int         @id @default(autoincrement())
-  buyerId   String
-  buyer     Buyer       @relation(fields: [buyerId], references: [id])
-  status    OrderStatus @default(PENDING)
-  createdAt DateTime    @default(now()) @map("created_at")
-  updatedAt DateTime    @updatedAt @map("updated_at")
-  OrderItem OrderItem[]
+  id         Int         @id @default(autoincrement())
+  buyerId    String
+  buyer      Buyer       @relation(fields: [buyerId], references: [id])
+  status     OrderStatus @default(PENDING)
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  orderItems OrderItem[]
 
   @@map("orders")
 }
@@ -63,7 +63,7 @@ model OrderItem {
   orderId            Int
   order              Order   @relation(fields: [orderId], references: [id])
   productId          String  @map("product_id")
-  Product            Product @relation(fields: [productId], references: [id])
+  product            Product @relation(fields: [productId], references: [id])
   personalizedName   String? @map("personalized_name")
   personalizedNumber Int?    @map("personalized_number")
   size               String
