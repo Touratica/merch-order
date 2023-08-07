@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  DELIVERED
+}
+
+model Buyer {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  vatId     String   @map("vat_id")
+  email     String
+  phone     String?
+  Order     Order[]
+
+  @@unique([firstName, lastName, vatId, email])
+  @@map("buyers")
+}
+
+model Product {
+  id                   String      @id @default(cuid())
+  name                 String      @unique
+  sizes                String[]
+  isPersonalizable     Boolean     @map("is_personalizable")
+  basePrice            Float       @map("base_price")
+  memberDiscount       Float       @map("member_discount")
+  athleteDiscount      Float       @map("athlete_discount")
+  personalizationPrice Float       @map("personalization_price")
+  OrderItems           OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  buyerId   String
+  buyer     Buyer       @relation(fields: [buyerId], references: [id])
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  OrderItem OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id                 String  @id @default(cuid())
+  orderId            Int
+  order              Order   @relation(fields: [orderId], references: [id])
+  productId          String  @map("product_id")
+  Product            Product @relation(fields: [productId], references: [id])
+  personalizedName   String? @map("personalized_name")
+  personalizedNumber Int?    @map("personalized_number")
+  size               String
+  quantity           Int
+
+  @@map("order_items")
+}
