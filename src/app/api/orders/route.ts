@@ -1,7 +1,54 @@
 import { prisma } from "@/lib/prisma";
 import { OrderValidator } from "@/lib/validators/order";
+import { Buyer } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
+async function getOrUpsertBuyer({
+  firstName,
+  lastName,
+  vatId,
+  email,
+  phone,
+}: Pick<
+  Buyer,
+  "firstName" | "lastName" | "vatId" | "email" | "phone"
+>): Promise<Buyer> {
+  const buyer = await prisma.buyer.findUnique({
+    where: {
+      firstName_lastName_vatId_email: {
+        firstName,
+        lastName,
+        vatId,
+        email,
+      },
+    },
+  });
+
+  if (!buyer || buyer.phone !== phone)
+    return await prisma.buyer.upsert({
+      where: {
+        firstName_lastName_vatId_email: {
+          firstName,
+          lastName,
+          vatId,
+          email,
+        },
+      },
+      create: {
+        firstName,
+        lastName,
+        vatId,
+        email,
+        phone,
+      },
+      update: {
+        phone,
+      },
+    });
+
+  return buyer;
+}
 
 export async function POST(req: Request) {
   try {
@@ -19,42 +66,13 @@ export async function POST(req: Request) {
       productQuantity,
     } = OrderValidator.parse(body);
 
-    let buyer = await prisma.buyer.findUnique({
-      where: {
-        firstName_lastName_vatId_email: {
-          firstName: buyerFirstName,
-          lastName: buyerLastName,
-          vatId: buyerVatId,
-          email: buyerEmail,
-        },
-      },
+    let buyer = await getOrUpsertBuyer({
+      firstName: buyerFirstName,
+      lastName: buyerLastName,
+      vatId: buyerVatId,
+      email: buyerEmail,
+      phone: buyerMobilePhone || null,
     });
-
-    if (buyer && buyer.phone !== buyerMobilePhone)
-      buyer = await prisma.buyer.update({
-        where: {
-          firstName_lastName_vatId_email: {
-            firstName: buyerFirstName,
-            lastName: buyerLastName,
-            vatId: buyerVatId,
-            email: buyerEmail,
-          },
-        },
-        data: {
-          phone: buyerMobilePhone,
-        },
-      });
-
-    if (!buyer)
-      buyer = await prisma.buyer.create({
-        data: {
-          firstName: buyerFirstName,
-          lastName: buyerLastName,
-          vatId: buyerVatId,
-          email: buyerEmail,
-          phone: buyerMobilePhone,
-        },
-      });
 
     const order = await prisma.order.create({
       data: {

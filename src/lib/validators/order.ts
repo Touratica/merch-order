@@ -33,7 +33,8 @@ export const OrderValidator = z.object({
       message: "O número deve ser um número de telemóvel válido.",
     })
     .optional()
-    .or(z.literal("")),
+    .or(z.literal(""))
+    .transform((e) => (e === "" ? undefined : e)),
   productId: z.string().cuid({ message: "Product ID is not valid." }),
   productPersonalizedName: z
     .string()
