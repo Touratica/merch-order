@@ -67,7 +67,7 @@ export default function Form({ products }: { products: Product[] }) {
         productQuantity,
       };
 
-      const { data } = await axios.post("/api/orders/", payload);
+      const { data } = await axios.post("/api/orders", payload);
 
       return data;
     },

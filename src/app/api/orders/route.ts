@@ -5,6 +5,12 @@ import sgMail from "@sendgrid/mail";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+/**
+ * Gets the buyer from the database or creates it if it doesn't exist. If the buyer exists but the phone number is different, it updates the phone number.
+ * @param {Pick<Buyer, "firstName" | "lastName" | "vatId" | "email" | "phone">} buyer - Buyer details
+ * @returns {Promise<Buyer>} The buyer
+ * @throws If the buyer could not be retrived/created/updated
+ */
 async function getOrUpsertBuyer({
   firstName,
   lastName,
@@ -51,9 +57,16 @@ async function getOrUpsertBuyer({
   return buyer;
 }
 
-async function sendMail(
-  order: Order & { orderItems: (OrderItem & { product: Product })[] },
-  buyer: Buyer
+/**
+ * Sends an email to the store owner with the order details
+ * @param {Order & { orderItems: (OrderItem & { product: Product })[] } & { buyer: Buyer; }} order - Details of the order, including the buyer and the order items with the product details
+ *
+ * @throws If the email could not be sent
+ */
+async function sendEmail(
+  order: Order & { orderItems: (OrderItem & { product: Product })[] } & {
+    buyer: Buyer;
+  }
 ) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
@@ -62,15 +75,15 @@ async function sendMail(
     to: process.env.SENDGRID_TO_EMAIL!,
     subject: `Encomenda #${order.id}`,
     html: `<h1>Encomenda #${order.id}</h1>
-    <p>Nome: ${buyer.firstName} ${buyer.lastName}</p>
-    <p>NIF: ${buyer.vatId}</p>
-    <p>Email: ${buyer.email}</p>
-    <p>Telemóvel: ${buyer.phone}</p>
-    <p>Produto: ${order.orderItems[0].product.name}</p>
-    <p>Tamanho: ${order.orderItems[0].size}</p>
-    <p>Nome personalizado: ${order.orderItems[0].personalizedName}</p>
-    <p>Número personalizado: ${order.orderItems[0].personalizedNumber}</p>
-    <p>Quantidade: ${order.orderItems[0].quantity}</p>`,
+    <p>Nome: ${order.buyer.firstName} ${order.buyer.lastName}</p>
+    <p>NIF: ${order.buyer.vatId}</p>
+    <p>Email: ${order.buyer.email}</p>
+    <p>Telemóvel: ${order.buyer.phone}</p>
+    <p>Produto: ${order.orderItems.at(0)?.product.name}</p>
+    <p>Tamanho: ${order.orderItems.at(0)?.size}</p>
+    <p>Nome personalizado: ${order.orderItems.at(0)?.personalizedName}</p>
+    <p>Número personalizado: ${order.orderItems.at(0)?.personalizedNumber}</p>
+    <p>Quantidade: ${order.orderItems.at(0)?.quantity}</p>`,
   };
 
   try {
@@ -86,7 +99,17 @@ async function sendMail(
   }
 }
 
-export async function POST(req: Request) {
+/**
+ * Creates an order and sends an email to the store owner with the order details
+ * @endpoint POST /api/orders
+ * @async
+ * @param {Request} req - The request
+ * @returns {Promise<NextResponse>} The response
+ * @throws If the request body is invalid or if the order could not be created
+ * @throws If the email could not be sent
+ * @throws If the request could not be processed
+ */
+export async function POST(req: Request): Promise<NextResponse> {
   try {
     const body = await req.json();
     const {
@@ -125,12 +148,17 @@ export async function POST(req: Request) {
       },
       include: {
         orderItems: { include: { product: true } },
+        buyer: true,
       },
     });
 
-    await sendMail(order, buyer);
+    await sendEmail(order);
 
-    return new NextResponse(JSON.stringify(order), { status: 201 });
+    return new NextResponse<
+      Order & { orderItems: (OrderItem & { product: Product })[] } & {
+        buyer: Buyer;
+      }
+    >(JSON.stringify(order), { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new NextResponse(error.message, { status: 400 });
