@@ -6,6 +6,9 @@ export default async function Home() {
 
   return (
     <main className="container mx-auto">
+      <h1 className="mb-4 font-semibold text-xl sm:text-2xl md:text-3xl">
+        Encomenda de equipamentos e merchandizing
+      </h1>
       <OrderForm products={products} />
     </main>
   );
