@@ -77,21 +77,46 @@ async function sendEmail(
     from: process.env.SENDGRID_FROM_EMAIL!,
     to: process.env.SENDGRID_TO_EMAIL!,
     subject: `Encomenda #${order.id}`,
-    html: `<h1>Encomenda #${order.id}</h1>
+    html: `
+    <head>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 0.25rem 0.5rem;
+        min-width: 2.5rem;
+        text-align: center;
+      }
+    </style>
+    </head>
+    <h1>Encomenda #${order.id}</h1>
     <p><b>Nome:</b> ${order.buyer.firstName} ${order.buyer.lastName}</p>
     <p><b>NIF:</b> ${order.buyer.vatId}</p>
     <p><b>Email:</b> ${order.buyer.email}</p>
     <p><b>Telemóvel:</b> ${order.buyer.phone || ""}</p>
     <p><b>Tipo de cliente:</b> ${order.buyer.type}</p>
-    <p><b>Produto:</b> ${order.orderItems.at(0)?.product.name}</p>
-    <p><b>Tamanho:</b> ${order.orderItems.at(0)?.size}</p>
-    <p><b>Nome personalizado:</b> ${
-      order.orderItems.at(0)?.personalizedName || ""
-    }</p>
-    <p><b>Número personalizado:</b> ${
-      order.orderItems.at(0)?.personalizedNumber || ""
-    }</p>
-    <p>Quantidade: ${order.orderItems.at(0)?.quantity}</p>`,
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Tamanho</th>
+          <th>Nome</th>
+          <th>Número</th>
+          <th>Qnt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${order.orderItems.at(0)?.product.name}</td>
+          <td>${order.orderItems.at(0)?.size}</td>
+          <td>${order.orderItems.at(0)?.personalizedName || ""}</td>
+          <td>${order.orderItems.at(0)?.personalizedNumber || ""}</td>
+          <td>${order.orderItems.at(0)?.quantity}</td>
+        </tr>
+      </tbody>
+    </table>`,
   };
 
   try {
