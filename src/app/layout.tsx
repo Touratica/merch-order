@@ -4,8 +4,9 @@ import { Toaster } from "@/components/ui/Toaster";
 import "@/styles/globals.css";
 
 export const metadata = {
-  title: "KLX | Clube Korfball de Lisboa - Equipamentos",
-  description: "Encomenda de equipamentos do Clube Korfball de Lisboa - KLX",
+  title: "KLX | Clube Korfball de Lisboa - Merch",
+  description:
+    "Encomenda de equipamentos e merchandizing do Clube Korfball de Lisboa - KLX",
 };
 
 export default function RootLayout({
