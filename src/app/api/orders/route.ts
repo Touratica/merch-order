@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 /**
- * Gets the buyer from the database or creates it if it doesn't exist. If the buyer exists but the phone number is different, it updates the phone number.
+ * Gets the buyer from the database or creates it if it doesn't exist. If the buyer exists but the phone number or type is different, it updates the phone number and type.
  * @param {Pick<Buyer, "firstName" | "lastName" | "vatId" | "email" | "phone">} buyer - Buyer details
  * @returns {Promise<Buyer>} The buyer
  * @throws If the buyer could not be retrived/created/updated
@@ -17,9 +17,10 @@ async function getOrUpsertBuyer({
   vatId,
   email,
   phone,
+  type,
 }: Pick<
   Buyer,
-  "firstName" | "lastName" | "vatId" | "email" | "phone"
+  "firstName" | "lastName" | "vatId" | "email" | "phone" | "type"
 >): Promise<Buyer> {
   const buyer = await prisma.buyer.findUnique({
     where: {
@@ -32,7 +33,7 @@ async function getOrUpsertBuyer({
     },
   });
 
-  if (!buyer || buyer.phone !== phone)
+  if (!buyer || buyer.phone !== phone || buyer.type !== type)
     return await prisma.buyer.upsert({
       where: {
         firstName_lastName_vatId_email: {
@@ -48,9 +49,11 @@ async function getOrUpsertBuyer({
         vatId,
         email,
         phone,
+        type,
       },
       update: {
         phone,
+        type,
       },
     });
 
@@ -75,14 +78,19 @@ async function sendEmail(
     to: process.env.SENDGRID_TO_EMAIL!,
     subject: `Encomenda #${order.id}`,
     html: `<h1>Encomenda #${order.id}</h1>
-    <p>Nome: ${order.buyer.firstName} ${order.buyer.lastName}</p>
-    <p>NIF: ${order.buyer.vatId}</p>
-    <p>Email: ${order.buyer.email}</p>
-    <p>Telemóvel: ${order.buyer.phone}</p>
-    <p>Produto: ${order.orderItems.at(0)?.product.name}</p>
-    <p>Tamanho: ${order.orderItems.at(0)?.size}</p>
-    <p>Nome personalizado: ${order.orderItems.at(0)?.personalizedName}</p>
-    <p>Número personalizado: ${order.orderItems.at(0)?.personalizedNumber}</p>
+    <p><b>Nome:</b> ${order.buyer.firstName} ${order.buyer.lastName}</p>
+    <p><b>NIF:</b> ${order.buyer.vatId}</p>
+    <p><b>Email:</b> ${order.buyer.email}</p>
+    <p><b>Telemóvel:</b> ${order.buyer.phone || ""}</p>
+    <p><b>Tipo de cliente:</b> ${order.buyer.type}</p>
+    <p><b>Produto:</b> ${order.orderItems.at(0)?.product.name}</p>
+    <p><b>Tamanho:</b> ${order.orderItems.at(0)?.size}</p>
+    <p><b>Nome personalizado:</b> ${
+      order.orderItems.at(0)?.personalizedName || ""
+    }</p>
+    <p><b>Número personalizado:</b> ${
+      order.orderItems.at(0)?.personalizedNumber || ""
+    }</p>
     <p>Quantidade: ${order.orderItems.at(0)?.quantity}</p>`,
   };
 
@@ -100,7 +108,7 @@ async function sendEmail(
 }
 
 /**
- * Creates an order and sends an email to the store owner with the order details
+ * Creates an order and sends an email to the store owner with the order details.
  * @endpoint POST /api/orders
  * @async
  * @param {Request} req - The request
@@ -118,6 +126,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       buyerVatId,
       buyerEmail,
       buyerMobilePhone,
+      buyerType,
       productId,
       productPersonalizedName,
       productPersonalizedNumber,
@@ -131,6 +140,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       vatId: buyerVatId,
       email: buyerEmail,
       phone: buyerMobilePhone || null,
+      type: buyerType,
     });
 
     const order = await prisma.order.create({

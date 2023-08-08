@@ -35,6 +35,7 @@ export const OrderValidator = z.object({
     .optional()
     .or(z.literal(""))
     .transform((e) => (e === "" ? undefined : e)),
+  buyerType: z.enum(["GUEST", "MEMBER", "ATHLETE"]),
   productId: z.string().cuid({ message: "Product ID is not valid." }),
   productPersonalizedName: z
     .string()

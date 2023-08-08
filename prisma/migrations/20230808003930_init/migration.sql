@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "BuyerType" AS ENUM ('MEMBER', 'ATHLETE', 'GUEST');
+
+-- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'PAID', 'CANCELLED', 'DELIVERED');
 
 -- CreateTable
@@ -11,6 +14,7 @@ CREATE TABLE "buyers" (
     "vat_id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "phone" TEXT,
+    "type" "BuyerType" NOT NULL,
 
     CONSTRAINT "buyers_pkey" PRIMARY KEY ("id")
 );

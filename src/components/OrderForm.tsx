@@ -3,23 +3,26 @@
 import { toast } from "@/hooks/use-toast";
 import { OrderPlacementPayload, OrderValidator } from "@/lib/validators/order";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Order, Product } from "@prisma/client";
+import type { Order, Product } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/Button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/Form";
+import { RadioGroup, RadioGroupItem } from "./ui/RadioGroup";
+import { Separator } from "./ui/Separator";
 
-export default function Form({ products }: { products: Product[] }) {
-  const {
-    register,
-    watch,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    resetField,
-  } = useForm<OrderPlacementPayload>({
+export default function OrderForm({ products }: { products: Product[] }) {
+  const form = useForm<OrderPlacementPayload>({
     resolver: zodResolver(OrderValidator),
     defaultValues: {
       buyerFirstName: "",
@@ -27,6 +30,7 @@ export default function Form({ products }: { products: Product[] }) {
       buyerVatId: "",
       buyerEmail: "",
       buyerMobilePhone: undefined,
+      buyerType: "GUEST",
       productId: "",
       productSize: "",
       productPersonalizedName: undefined,
@@ -34,12 +38,13 @@ export default function Form({ products }: { products: Product[] }) {
       productQuantity: 1,
     },
   });
-  const watchProductId = watch("productId");
-
-  const router = useRouter();
+  const watchProductId = form.watch("productId");
+  const watchBuyerType = form.watch("buyerType");
 
   const [availableSizes, setAvailableSizes] = useState<string[]>([]);
   const [isPersonalizable, setIsPersonalizable] = useState<boolean>(false);
+  const [product, setProduct] = useState<Product | undefined>(undefined);
+  const [price, setPrice] = useState<number>(0);
 
   const { mutate: placeOrder, isLoading } = useMutation({
     mutationFn: async ({
@@ -48,6 +53,7 @@ export default function Form({ products }: { products: Product[] }) {
       buyerVatId,
       buyerEmail,
       buyerMobilePhone,
+      buyerType,
       productId,
       productSize,
       productPersonalizedName,
@@ -60,6 +66,7 @@ export default function Form({ products }: { products: Product[] }) {
         buyerVatId,
         buyerEmail,
         buyerMobilePhone,
+        buyerType,
         productId,
         productSize,
         productPersonalizedName,
@@ -80,7 +87,8 @@ export default function Form({ products }: { products: Product[] }) {
       });
     },
     onSuccess: (data: Order) => {
-      reset();
+      form.reset();
+      form.control._resetDefaultValues();
       return toast({
         title: `Encomenda #${data.id}!`,
         description: "A sua encomenda foi feita com sucesso!",
@@ -89,21 +97,36 @@ export default function Form({ products }: { products: Product[] }) {
   });
 
   useEffect(() => {
-    const product = products.find((product) => product.id === watchProductId);
+    setProduct(products.find((product) => product.id === watchProductId));
 
-    if (!product) return; // No product selected
+    if (!product) {
+      // No product selected
+      setPrice(0);
+      return;
+    }
 
     setAvailableSizes(product.sizes);
     setIsPersonalizable(product.isPersonalizable);
 
-    resetField("productSize");
-    resetField("productPersonalizedName");
-    resetField("productPersonalizedNumber");
-  }, [products, watchProductId, resetField]);
+    const disccount = {
+      GUEST: 0,
+      MEMBER: product?.memberDiscount || 0,
+      ATHLETE: product?.athleteDiscount || 0,
+    };
+
+    setPrice(product.basePrice * (1 - disccount[watchBuyerType]));
+
+    if (!product.isPersonalizable) {
+      form.resetField("productPersonalizedName");
+      form.resetField("productPersonalizedNumber");
+    }
+  }, [products, product, watchProductId, form, watchBuyerType]);
+
+  useEffect(() => {}, [watchBuyerType, product]);
 
   return (
-    <>
-      <form onSubmit={handleSubmit((e) => placeOrder(e))}>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit((e) => placeOrder(e))}>
         <div className="overflow-hidden shadow sm:rounded-md">
           <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:p-6">
             <section id="personal-info">
@@ -125,11 +148,11 @@ export default function Form({ products }: { products: Product[] }) {
                     placeholder="Jacaré"
                     className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
                     required
-                    {...register("buyerFirstName")}
+                    {...form.register("buyerFirstName")}
                   />
-                  {errors?.buyerFirstName && (
+                  {form.formState.errors?.buyerFirstName && (
                     <p className="px-1 text-xs text-red-600">
-                      {errors.buyerFirstName.message}
+                      {form.formState.errors.buyerFirstName.message}
                     </p>
                   )}
                 </div>
@@ -147,11 +170,11 @@ export default function Form({ products }: { products: Product[] }) {
                     placeholder="Quim"
                     className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
                     required
-                    {...register("buyerLastName")}
+                    {...form.register("buyerLastName")}
                   />
-                  {errors?.buyerLastName && (
+                  {form.formState.errors?.buyerLastName && (
                     <p className="px-1 text-xs text-red-600">
-                      {errors.buyerLastName.message}
+                      {form.formState.errors.buyerLastName.message}
                     </p>
                   )}
                 </div>
@@ -168,11 +191,11 @@ export default function Form({ products }: { products: Product[] }) {
                     placeholder="999999990"
                     className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
                     required
-                    {...register("buyerVatId")}
+                    {...form.register("buyerVatId")}
                   />
-                  {errors?.buyerVatId && (
+                  {form.formState.errors?.buyerVatId && (
                     <p className="px-1 text-xs text-red-600">
-                      {errors.buyerVatId.message}
+                      {form.formState.errors.buyerVatId.message}
                     </p>
                   )}
                 </div>
@@ -190,11 +213,11 @@ export default function Form({ products }: { products: Product[] }) {
                     placeholder="quim@korfballx.pt"
                     className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
                     required
-                    {...register("buyerEmail")}
+                    {...form.register("buyerEmail")}
                   />
-                  {errors?.buyerEmail && (
+                  {form.formState.errors?.buyerEmail && (
                     <p className="px-1 text-xs text-red-600">
-                      {errors.buyerEmail.message}
+                      {form.formState.errors.buyerEmail.message}
                     </p>
                   )}
                 </div>
@@ -211,22 +234,18 @@ export default function Form({ products }: { products: Product[] }) {
                     autoComplete="section-personal mobile tel-national"
                     placeholder="935018626"
                     className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
-                    {...register("buyerMobilePhone")}
+                    {...form.register("buyerMobilePhone")}
                   />
-                  {errors?.buyerMobilePhone && (
+                  {form.formState.errors?.buyerMobilePhone && (
                     <p className="px-1 text-xs text-red-600">
-                      {errors.buyerMobilePhone.message}
+                      {form.formState.errors.buyerMobilePhone.message}
                     </p>
                   )}
                 </div>
                 {/* <div className="hidden lg:col-span-8 lg:block" /> */}
               </div>
             </section>
-            <div className="hidden sm:block" aria-hidden="true">
-              <div className="py-5">
-                <div className="border-t border-gray-200" />
-              </div>
-            </div>
+            <Separator className="my-5 bg-gray-200" />
             <section id="order">
               <h3 className="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
                 Encomenda
@@ -243,7 +262,7 @@ export default function Form({ products }: { products: Product[] }) {
                     id="product-id"
                     className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
                     required
-                    {...register("productId")}
+                    {...form.register("productId")}
                   >
                     <option value="" disabled hidden>
                       Escolha um
@@ -266,7 +285,7 @@ export default function Form({ products }: { products: Product[] }) {
                     id="size"
                     className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
                     required
-                    {...register("productSize")}
+                    {...form.register("productSize")}
                   >
                     <option value="" disabled hidden>
                       Escolha um
@@ -292,11 +311,14 @@ export default function Form({ products }: { products: Product[] }) {
                         type="text"
                         id="personalized-name"
                         className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
-                        {...register("productPersonalizedName")}
+                        {...form.register("productPersonalizedName")}
                       />
-                      {errors?.productPersonalizedName && (
+                      {form.formState.errors?.productPersonalizedName && (
                         <p className="px-1 text-xs text-red-600">
-                          {errors.productPersonalizedName.message}
+                          {
+                            form.formState.errors.productPersonalizedName
+                              .message
+                          }
                         </p>
                       )}
                     </div>
@@ -313,11 +335,14 @@ export default function Form({ products }: { products: Product[] }) {
                         min={0}
                         max={99}
                         className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
-                        {...register("productPersonalizedNumber")}
+                        {...form.register("productPersonalizedNumber")}
                       />
-                      {errors?.productPersonalizedNumber && (
+                      {form.formState.errors?.productPersonalizedNumber && (
                         <p className="px-1 text-xs text-red-600">
-                          {errors.productPersonalizedNumber.message}
+                          {
+                            form.formState.errors.productPersonalizedNumber
+                              .message
+                          }
                         </p>
                       )}
                     </div>
@@ -336,14 +361,70 @@ export default function Form({ products }: { products: Product[] }) {
                     min={0}
                     className="mt-2 block w-full rounded-md border-0 p-1.5 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
                     required
-                    {...register("productQuantity")}
+                    {...form.register("productQuantity")}
                   />
-                  {errors?.productQuantity && (
+                  {form.formState.errors?.productQuantity && (
                     <p className="px-1 text-xs text-red-600">
-                      {errors.productQuantity.message}
+                      {form.formState.errors.productQuantity.message}
                     </p>
                   )}
                 </div>
+              </div>
+            </section>
+            <Separator className="my-5 bg-gray-200" />
+            <section id="price" className="flex justify-between items-center">
+              <FormField
+                control={form.control}
+                name="buyerType"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Eu...</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="GUEST" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Não sou sócio
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="MEMBER" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Sou sócio
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="ATHLETE" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Sou atleta
+                          </FormLabel>
+                        </FormItem>
+                        <FormDescription>
+                          Esta informação é não vinculativa.
+                        </FormDescription>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="mr-6 text-4xl sm:text-6xl">
+                {price.toLocaleString("pt-PT", {
+                  style: "currency",
+                  currency: "EUR",
+                  useGrouping: true,
+                })}
               </div>
             </section>
           </div>
@@ -358,6 +439,6 @@ export default function Form({ products }: { products: Product[] }) {
           </div>
         </div>
       </form>
-    </>
+    </Form>
   );
 }

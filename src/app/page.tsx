@@ -1,4 +1,4 @@
-import Form from "@/components/Form";
+import OrderForm from "@/components/OrderForm";
 import { prisma } from "@/lib/prisma";
 
 export default async function Home() {
@@ -6,7 +6,7 @@ export default async function Home() {
 
   return (
     <main className="container mx-auto">
-      <Form products={products} />
+      <OrderForm products={products} />
     </main>
   );
 }

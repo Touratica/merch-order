@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum BuyerType {
+  MEMBER
+  ATHLETE
+  GUEST
+}
+
 enum OrderStatus {
   PENDING
   PAID
@@ -18,14 +24,15 @@ enum OrderStatus {
 }
 
 model Buyer {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  firstName String   @map("first_name")
-  lastName  String   @map("last_name")
-  vatId     String   @map("vat_id")
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  firstName String    @map("first_name")
+  lastName  String    @map("last_name")
+  vatId     String    @map("vat_id")
   email     String
   phone     String?
+  type      BuyerType
   orders    Order[]
 
   @@unique([firstName, lastName, vatId, email])
