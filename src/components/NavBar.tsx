@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 
 export default function NavBar(): ReactElement {
   return (
-    <div className="bg-green-800 text-white text-2xl font-semibold p-3 mb-3 inline-flex w-full items-center">
+    <div className="mb-3 inline-flex w-full items-center bg-green-800 p-3 text-2xl font-semibold text-white">
       <Image
         src="/klx.svg"
         alt="Logo"

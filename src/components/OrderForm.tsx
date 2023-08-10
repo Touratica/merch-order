@@ -129,12 +129,12 @@ export default function OrderForm({ products }: { products: Product[] }) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit((e) => placeOrder(e))}>
         <div className="overflow-hidden shadow sm:rounded-md">
-          <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:p-6">
+          <div className="bg-white px-4 py-5 dark:bg-gray-800 sm:p-6">
             <section id="personal-info">
               <h3 className="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
                 Informação pessoal
               </h3>
-              <div className="grid grid-cols-12 gap-6 mt-3">
+              <div className="mt-3 grid grid-cols-12 gap-6">
                 <div className="col-span-12 sm:col-span-4 lg:col-span-3">
                   <label
                     htmlFor="first-name"
@@ -147,7 +147,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     id="first-name"
                     autoComplete="section-personal given-name"
                     placeholder="Jacaré"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     required
                     {...form.register("buyerFirstName")}
                   />
@@ -169,7 +169,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     id="last-name"
                     autoComplete="section-personal family-name"
                     placeholder="Quim"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     required
                     {...form.register("buyerLastName")}
                   />
@@ -190,7 +190,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     type="text"
                     id="vat-id"
                     placeholder="999999990"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     required
                     {...form.register("buyerVatId")}
                   />
@@ -212,7 +212,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     id="email"
                     autoComplete="section-personal email"
                     placeholder="quim@korfballx.pt"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     required
                     {...form.register("buyerEmail")}
                   />
@@ -234,7 +234,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     id="mobile-phone"
                     autoComplete="section-personal mobile tel-national"
                     placeholder="935018626"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     {...form.register("buyerMobilePhone")}
                   />
                   {form.formState.errors?.buyerMobilePhone && (
@@ -251,7 +251,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
               <h3 className="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
                 Encomenda
               </h3>
-              <div className="grid grid-cols-12 gap-6 mt-3">
+              <div className="mt-3 grid grid-cols-12 gap-6">
                 <div className="col-span-12 sm:col-span-5 lg:col-span-3">
                   <label
                     htmlFor="product-id"
@@ -261,7 +261,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                   </label>
                   <select
                     id="product-id"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     required
                     {...form.register("productId")}
                   >
@@ -284,7 +284,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                   </label>
                   <select
                     id="size"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     required
                     {...form.register("productSize")}
                   >
@@ -300,7 +300,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                 </div>
                 {isPersonalizable && (
                   <>
-                    <div className="hidden sm:block sm:col-span-6 md:hidden" />
+                    <div className="hidden sm:col-span-6 sm:block md:hidden" />
                     <div className="col-span-8 sm:col-span-7 lg:col-span-4">
                       <label
                         htmlFor="personalized-name"
@@ -311,7 +311,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                       <input
                         type="text"
                         id="personalized-name"
-                        className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                        className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                         {...form.register("productPersonalizedName")}
                       />
                       {form.formState.errors?.productPersonalizedName && (
@@ -335,7 +335,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                         id="personalized-number"
                         min={0}
                         max={99}
-                        className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                        className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                         {...form.register("productPersonalizedNumber")}
                       />
                       {form.formState.errors?.productPersonalizedNumber && (
@@ -360,7 +360,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     type="number"
                     id="quantity"
                     min={0}
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:placeholder:text-gray-400 dark:text-white"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     required
                     {...form.register("productQuantity")}
                   />
@@ -373,7 +373,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
               </div>
             </section>
             <Separator className="my-5 bg-gray-200" />
-            <section id="price" className="flex justify-between items-center">
+            <section id="price" className="flex items-center justify-between">
               <FormField
                 control={form.control}
                 name="buyerType"
@@ -430,8 +430,8 @@ export default function OrderForm({ products }: { products: Product[] }) {
             </section>
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 text-right sm:px-6 flex justify-end items-center space-x-2">
-            <p className="text-muted-foreground">
+          <div className="flex items-center justify-end space-x-3 bg-gray-50 px-4 py-3 dark:bg-gray-900 sm:px-6">
+            <p className="text-sm text-muted-foreground">
               O seu pedido sera submetido para validação interna.
             </p>
             <Button

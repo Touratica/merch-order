@@ -69,7 +69,7 @@ async function getOrUpsertBuyer({
 async function sendEmail(
   order: Order & { orderItems: (OrderItem & { product: Product })[] } & {
     buyer: Buyer;
-  }
+  },
 ) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
@@ -203,7 +203,7 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     return new NextResponse(
       "Could not place order at this time. Please try later",
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
