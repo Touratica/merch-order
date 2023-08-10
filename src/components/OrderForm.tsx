@@ -91,7 +91,8 @@ export default function OrderForm({ products }: { products: Product[] }) {
       form.control._resetDefaultValues();
       return toast({
         title: `Encomenda #${data.id}!`,
-        description: "A sua encomenda foi feita com sucesso!",
+        description:
+          "A sua encomenda foi feita com sucesso! Receberá informações sobre o pagamento após a validação da mesma.",
       });
     },
   });
@@ -429,7 +430,10 @@ export default function OrderForm({ products }: { products: Product[] }) {
             </section>
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 text-right sm:px-6">
+          <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 text-right sm:px-6 flex justify-end items-center space-x-2">
+            <p className="text-muted-foreground">
+              O seu pedido sera submetido para validação interna.
+            </p>
             <Button
               isLoading={isLoading}
               className="bg-green-600 text-white hover:bg-green-500 focus-visible:outline-green-500"
