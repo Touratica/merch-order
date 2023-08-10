@@ -42,7 +42,7 @@ const productData: Prisma.ProductCreateInput[] = [
   {
     name: "Calções de jogo",
     sizes: ["S", "M", "L", "XL", "2XL"],
-    isPersonalizable: true,
+    isPersonalizable: false,
     basePrice: 20,
     memberDiscount: 0.25,
     athleteDiscount: 0.35,
@@ -51,7 +51,7 @@ const productData: Prisma.ProductCreateInput[] = [
   {
     name: "Saia de jogo",
     sizes: ["S", "M", "L", "XL", "2XL"],
-    isPersonalizable: true,
+    isPersonalizable: false,
     basePrice: 32,
     memberDiscount: 0.25,
     athleteDiscount: 0.37,
@@ -60,7 +60,7 @@ const productData: Prisma.ProductCreateInput[] = [
   {
     name: "Casaco de fato de treino",
     sizes: ["S", "M", "L", "XL", "2XL"],
-    isPersonalizable: true,
+    isPersonalizable: false,
     basePrice: 52,
     memberDiscount: 0.25,
     athleteDiscount: 0.37,
@@ -69,7 +69,7 @@ const productData: Prisma.ProductCreateInput[] = [
   {
     name: "Calças de fato de treino",
     sizes: ["S", "M", "L", "XL", "2XL"],
-    isPersonalizable: true,
+    isPersonalizable: false,
     basePrice: 36,
     memberDiscount: 0.25,
     athleteDiscount: 0.36,
@@ -78,7 +78,7 @@ const productData: Prisma.ProductCreateInput[] = [
   {
     name: "Mochila",
     sizes: ["S", "M", "L", "XL", "2XL"],
-    isPersonalizable: true,
+    isPersonalizable: false,
     basePrice: 42,
     memberDiscount: 0.24,
     athleteDiscount: 0.38,
@@ -87,7 +87,7 @@ const productData: Prisma.ProductCreateInput[] = [
   {
     name: "T-shirt de treino/aquecimento",
     sizes: ["S", "M", "L", "XL", "2XL"],
-    isPersonalizable: true,
+    isPersonalizable: false,
     basePrice: 14,
     memberDiscount: 0.21,
     athleteDiscount: 0.36,
