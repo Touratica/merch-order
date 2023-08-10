@@ -1,7 +1,18 @@
 {
   "name": "merch-order",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.0.0-development",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/Touratica/clubman#readme",
+  "bugs": {
+    "url": "https://github.com/Touratica/clubman/issues",
+    "email": "it@korfballx.pt"
+  },
+  "author": "João Pedro Almeida <jpalmeida@korfballx.pt> (https://github.com/Touratica)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Touratica/merch-order.git"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,7 +20,8 @@
     "lint": "next lint",
     "postinstall": "npm run generate",
     "generate": "npx dotenv -c -- npx prisma generate",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.2.0",
@@ -49,14 +61,24 @@
     "lint-staged": "^13.2.3",
     "prettier": "^3.0.1",
     "prettier-plugin-prisma": "^5.0.0",
-    "prettier-plugin-tailwindcss": "^0.4.1",
+    "prettier-plugin-tailwindcss": "^0.5.0",
     "prisma": "^5.1.1",
+    "semantic-release": "^21.0.7",
     "ts-node": "^10.9.1"
   },
+  "private": true,
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }
