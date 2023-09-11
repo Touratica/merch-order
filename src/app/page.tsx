@@ -10,7 +10,7 @@ export default async function Home() {
   return (
     <main className="container mx-auto">
       <h1 className="mb-4 text-xl font-semibold sm:text-2xl md:text-3xl">
-        Encomenda de equipamentos e merchandizing
+        Encomenda de equipamentos e merchandise
       </h1>
       <OrderForm products={products} />
     </main>
