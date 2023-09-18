@@ -1,3 +1,4 @@
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { z } from "zod";
 import isValidVatId from "../vatId";
 
@@ -28,9 +29,8 @@ export const OrderValidator = z.object({
     .email({ message: "Este endereço de e-mail não é válido." }),
   buyerMobilePhone: z
     .string()
-    .length(9, { message: "O número deve ter 9 dígitos" })
-    .regex(/^9\d{8}$/, {
-      message: "O número deve ser um número de telemóvel válido.",
+    .refine((phone) => isValidPhoneNumber(phone, { defaultCountry: "PT" }), {
+      message: "O número de telemóvel não é válido.",
     })
     .optional()
     .or(z.literal(""))
