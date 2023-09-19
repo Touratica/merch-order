@@ -432,7 +432,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
 
           <div className="flex items-center justify-end space-x-3 bg-gray-50 px-4 py-3 dark:bg-gray-900 sm:px-6">
             <p className="text-sm text-muted-foreground">
-              O seu pedido sera submetido para validação interna.
+              O seu pedido será submetido para validação interna.
             </p>
             <Button
               isLoading={isLoading}
