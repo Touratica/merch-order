@@ -7,6 +7,6 @@
 
 <img src="https://merch.korfballx.pt/klx.svg" alt="drawing" width="150"/>
 
-**_merch-order_** is an application built at [Clube Korfball de Lisboa - KLX](https://korfballx.pt) with the purpose of providing its users with a platform in which they can place orders for equipment or merchandize. Its is publically available through https://merch.korfballx.pt.
+**_merch-order_** is an application built at [Clube Korfball de Lisboa - KLX](https://korfballx.pt) with the purpose of providing a platform in which people can place orders for equipment and/or merchandise. It is publicly available through https://merch.korfballx.pt.
 
 It was developed by [João Pedro Almeida](https://github.com/Touratica), IT Manager at the association, using the Next.js framework.
