@@ -20,7 +20,7 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "npm run generate",
-    "generate": "npx dotenv -c -- npx prisma generate",
+    "generate": "npx prisma generate",
     "prepare": "husky install",
     "semantic-release": "semantic-release"
   },
@@ -57,7 +57,6 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "dotenv-cli": "^7.3.0",
     "eslint-config-prettier": "^9.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
