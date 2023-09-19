@@ -412,7 +412,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                           </FormLabel>
                         </FormItem>
                         <FormDescription>
-                          Esta informação é não vinculativa.
+                          Esta informação não é vinculativa.
                         </FormDescription>
                       </RadioGroup>
                     </FormControl>
