@@ -67,7 +67,13 @@
     "semantic-release": "^22.0.0",
     "ts-node": "^10.9.1"
   },
+  "engines": {
+    "node": ">= 16.13"
+  },
   "private": true,
+  "publishConfig": {
+    "access": "restricted"
+  },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
@@ -78,8 +84,5 @@
     "branches": [
       "main"
     ]
-  },
-  "publishConfig": {
-    "access": "restricted"
   }
 }

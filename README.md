@@ -1,34 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# merch-order
 
-## Getting Started
+![GitHub release (with filter)](https://img.shields.io/github/v/release/Touratica/merch-order)
+![GitHub issues](https://img.shields.io/github/issues/Touratica/merch-order)
+![Static Badge](https://img.shields.io/badge/node--lts-%3E%3D16.13-brightgreen)
+![Static Badge](https://img.shields.io/badge/license-Unlicensed-%239e9e9e)
 
-First, run the development server:
+<img src="https://merch.korfballx.pt/klx.svg" alt="drawing" width="150"/>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+**_merch-order_** is an application built at [Clube Korfball de Lisboa - KLX](https://korfballx.pt) with the purpose of providing its users with a platform in which they can place orders for equipment or merchandize. Its is publically available through https://merch.korfballx.pt.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+It was developed by [João Pedro Almeida](https://github.com/Touratica), IT Manager at the association, using the Next.js framework.
