@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 export default async function Home() {
-  const products = await prisma.product.findMany();
+  const products = await prisma.product.findMany({ orderBy: { name: "asc" } });
 
   return (
     <main className="container mx-auto">
