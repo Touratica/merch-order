@@ -19,8 +19,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npm run generate",
-    "generate": "npx prisma generate",
+    "postinstall": "bun run generate",
+    "generate": "bunx prisma generate",
     "prepare": "husky install",
     "semantic-release": "semantic-release"
   },
