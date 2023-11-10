@@ -1,8 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const productData: Prisma.ProductCreateInput[] = [
+const productData = [
   {
     name: "Camisola de jogo (verde) Masculina",
     sizes: ["S", "M", "L", "XL", "2XL"],
