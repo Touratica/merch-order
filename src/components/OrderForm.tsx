@@ -46,7 +46,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
   const [product, setProduct] = useState<Product | undefined>(undefined);
   const [price, setPrice] = useState<number>(0);
 
-  const { mutate: placeOrder, isLoading } = useMutation({
+  const { mutate: placeOrder, isPending } = useMutation({
     mutationFn: async ({
       buyerFirstName,
       buyerLastName,
@@ -435,7 +435,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
               O seu pedido será submetido para validação interna.
             </p>
             <Button
-              isLoading={isLoading}
+              isLoading={isPending}
               className="bg-green-600 text-white hover:bg-green-500 focus-visible:outline-green-500"
             >
               Submeter
