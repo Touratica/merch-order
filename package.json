@@ -67,7 +67,7 @@
     "typescript": "^5"
   },
   "engines": {
-    "node": ">= 16.13"
+    "node": ">= 18.17"
   },
   "private": true,
   "publishConfig": {
