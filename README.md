@@ -13,7 +13,7 @@ It was developed by [João Pedro Almeida](https://github.com/Touratica), IT Mana
 
 # Usage
 
-To run the application, execute the following command:
+To run the application, follow the instructions in `.env` and execute the following command:
 
 ```bash
 APP_PORT=[PORT] [STUDIO_PORT=[PORT]] POSTGRES_PASSWORD=[DB_PASSOWORD] docker compose up -d --build
