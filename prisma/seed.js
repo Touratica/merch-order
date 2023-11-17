@@ -137,6 +137,8 @@ const productData = [
     memberDiscount: 0.16,
     athleteDiscount: 0.16,
     personalizationPrice: 0,
+    image:
+      "https://uploadthing.com/f/c228f7da-166c-4761-a59a-6aca22176188-1x9apq.JPG",
   },
   {
     name: "Porta-chaves (Jacaré azul claro)",

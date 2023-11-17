@@ -48,6 +48,7 @@ model Product {
   memberDiscount       Float       @map("member_discount")
   athleteDiscount      Float       @map("athlete_discount")
   personalizationPrice Float       @map("personalization_price")
+  image                String?
   orderItems           OrderItem[]
 
   @@map("products")

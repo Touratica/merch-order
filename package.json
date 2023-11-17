@@ -74,7 +74,7 @@
     "access": "restricted"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.js"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
