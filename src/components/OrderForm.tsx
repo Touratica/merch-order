@@ -20,6 +20,7 @@ import {
 } from "./ui/Form";
 import { RadioGroup, RadioGroupItem } from "./ui/RadioGroup";
 import { Separator } from "./ui/Separator";
+import Image from "next/image";
 
 export default function OrderForm({ products }: { products: Product[] }) {
   const form = useForm<OrderPlacementPayload>({
@@ -370,6 +371,17 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     </p>
                   )}
                 </div>
+              </div>
+              <div className="mt-3 flex flex-col items-center justify-between sm:flex-row">
+                {product?.image && (
+                  <Image
+                    src={product?.image}
+                    width={300}
+                    height={300}
+                    alt="Product image"
+                    className="w-[450px] sm:w-[300px]"
+                  />
+                )}
               </div>
             </section>
             <Separator className="my-5 bg-gray-200" />
