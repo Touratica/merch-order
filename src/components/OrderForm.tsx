@@ -376,8 +376,6 @@ export default function OrderForm({ products }: { products: Product[] }) {
                 {product?.image && (
                   <Image
                     src={product?.image}
-                    width={300}
-                    height={300}
                     alt="Product image"
                     className="w-[450px] sm:w-[300px]"
                   />
@@ -413,14 +411,6 @@ export default function OrderForm({ products }: { products: Product[] }) {
                           </FormControl>
                           <FormLabel className="font-normal">
                             Sou sócio
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="ATHLETE" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            Sou atleta
                           </FormLabel>
                         </FormItem>
                         <FormDescription>
