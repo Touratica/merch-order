@@ -24,6 +24,7 @@ import Image from "next/image";
 
 export default function OrderForm({ products }: { products: Product[] }) {
   const form = useForm<OrderPlacementPayload>({
+    mode: "onBlur",
     resolver: zodResolver(OrderValidator),
     defaultValues: {
       buyerFirstName: "",
