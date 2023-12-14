@@ -185,6 +185,15 @@ const productData = [
     athleteDiscount: 0.4,
     personalizationPrice: 0,
   },
+  {
+    name: "Tote bag",
+    sizes: ["Único"],
+    isPersonalizable: false,
+    basePrice: 7,
+    memberDiscount: 0.14,
+    athleteDiscount: 0.14,
+    personalizationPrice: 0,
+  },
 ];
 
 async function main() {
