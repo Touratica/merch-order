@@ -1,6 +1,7 @@
 {
   "name": "merch-order",
   "version": "0.0.0-development",
+  "type": "module",
   "description": "",
   "keywords": [],
   "homepage": "https://github.com/Touratica/merch-order#readme",
@@ -15,13 +16,15 @@
     "url": "https://github.com/Touratica/merch-order.git"
   },
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "dev": "next dev",
+    "postinstall": "prisma generate",
     "lint": "next lint",
-    "postinstall": "npm run prisma:generate",
-    "prisma:generate": "npx prisma generate",
-    "semantic-release": "semantic-release"
+    "start": "next start",
+    "semantic-release": "semantic-release",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -47,24 +50,27 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/eslint": "^8.56.2",
+    "@types/node": "^20.11.5",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
     "autoprefixer": "^10.4.17",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.1.0",
     "eslint-config-prettier": "^9.1.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
-    "postcss": "^8",
+    "postcss": "^8.4.33",
     "prettier": "^3.2.4",
     "prettier-plugin-prisma": "^5.0.0",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "prisma": "^5.8.1",
     "semantic-release": "^23.0.0",
     "tailwindcss": "^3.4.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">= 18.17"
@@ -74,7 +80,7 @@
     "access": "restricted"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.js"
+    "seed": "tsx prisma/seed.js"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
@@ -83,5 +89,9 @@
     "branches": [
       "main"
     ]
-  }
+  },
+  "ct3aMetadata": {
+    "initVersion": "7.26.0"
+  },
+  "packageManager": "npm@10.3.0"
 }

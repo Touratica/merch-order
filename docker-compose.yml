@@ -6,11 +6,8 @@ services:
     restart: unless-stopped
     ports:
       - ${APP_PORT}:3000
-      - ${STUDIO_PORT}:5555
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?schema=public
-    env_file:
-      - .env.local
     depends_on:
       - db
 

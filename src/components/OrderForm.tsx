@@ -1,11 +1,12 @@
 "use client";
 
 import { toast } from "@/hooks/use-toast";
-import { PlaceOrderPayload, OrderValidator } from "@/lib/validators/order";
+import { OrderValidator, type PlaceOrderPayload } from "@/lib/validators/order";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Order, Product } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/Button";
@@ -20,7 +21,6 @@ import {
 } from "./ui/Form";
 import { RadioGroup, RadioGroupItem } from "./ui/RadioGroup";
 import { Separator } from "./ui/Separator";
-import Image from "next/image";
 
 export default function OrderForm({ products }: { products: Product[] }) {
   const form = useForm<PlaceOrderPayload>({
@@ -76,7 +76,10 @@ export default function OrderForm({ products }: { products: Product[] }) {
         productQuantity,
       };
 
-      const { data } = await axios.post("/api/orders", payload);
+      const { data }: { data: Order } = await axios.post(
+        "/api/orders",
+        payload,
+      );
 
       return data;
     },
@@ -125,13 +128,13 @@ export default function OrderForm({ products }: { products: Product[] }) {
     }
   }, [products, product, watchProductId, form, watchBuyerType]);
 
-  useEffect(() => {}, [watchBuyerType, product]);
+  // useEffect(() => {}, [watchBuyerType, product]);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit((e) => placeOrder(e))}>
         <div className="overflow-hidden shadow sm:rounded-md">
-          <div className="bg-white px-4 py-5 dark:bg-gray-800 sm:p-6">
+          <div className="bg-white px-4 py-5 sm:p-6 dark:bg-gray-800">
             <section id="personal-info">
               <h3 className="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
                 Informação pessoal
@@ -149,7 +152,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     id="first-name"
                     autoComplete="section-personal given-name"
                     placeholder="Jacaré"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                     required
                     {...form.register("buyerFirstName")}
                   />
@@ -171,7 +174,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     id="last-name"
                     autoComplete="section-personal family-name"
                     placeholder="Quim"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                     required
                     {...form.register("buyerLastName")}
                   />
@@ -192,7 +195,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     type="text"
                     id="vat-id"
                     placeholder="999999990"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                     required
                     {...form.register("buyerVatId")}
                   />
@@ -214,7 +217,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     id="email"
                     autoComplete="section-personal email"
                     placeholder="quim@korfballx.pt"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                     required
                     {...form.register("buyerEmail")}
                   />
@@ -236,7 +239,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     id="mobile-phone"
                     autoComplete="section-personal mobile tel-national"
                     placeholder="935018626"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                     {...form.register("buyerMobilePhone")}
                   />
                   {form.formState.errors?.buyerMobilePhone && (
@@ -263,7 +266,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                   </label>
                   <select
                     id="product-id"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                     required
                     {...form.register("productId")}
                   >
@@ -286,7 +289,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                   </label>
                   <select
                     id="size"
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                     required
                     {...form.register("productSize")}
                   >
@@ -313,7 +316,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                       <input
                         type="text"
                         id="personalized-name"
-                        className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                         {...form.register("productPersonalizedName")}
                       />
                       {form.formState.errors?.productPersonalizedName && (
@@ -337,7 +340,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                         id="personalized-number"
                         min={0}
                         max={99}
-                        className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                         {...form.register("productPersonalizedNumber")}
                       />
                       {form.formState.errors?.productPersonalizedNumber && (
@@ -362,7 +365,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
                     type="number"
                     id="quantity"
                     min={0}
-                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 p-1.5 text-right text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
                     required
                     {...form.register("productQuantity")}
                   />
@@ -433,7 +436,7 @@ export default function OrderForm({ products }: { products: Product[] }) {
             </section>
           </div>
 
-          <div className="flex items-center justify-end space-x-3 bg-gray-50 px-4 py-3 dark:bg-gray-900 sm:px-6">
+          <div className="flex items-center justify-end space-x-3 bg-gray-50 px-4 py-3 sm:px-6 dark:bg-gray-900">
             <p className="text-sm text-muted-foreground">
               O seu pedido será submetido para validação interna.
             </p>

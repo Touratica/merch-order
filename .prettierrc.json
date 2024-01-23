@@ -1,4 +1,0 @@
-{
-  "plugins": ["prettier-plugin-prisma", "prettier-plugin-tailwindcss"],
-  "tailwindFunctions": ["cn"]
-}

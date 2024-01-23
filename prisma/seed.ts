@@ -1,8 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
+import { type Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const productData = [
+const productData: Prisma.ProductCreateInput[] = [
   {
     name: "Camisola de jogo (verde) Masculina",
     sizes: ["S", "M", "L", "XL", "2XL"],
@@ -208,7 +208,9 @@ async function main() {
 }
 
 main()
-  .then(async () => await prisma.$disconnect())
+  .then(async () => {
+    await prisma.$disconnect();
+  })
   .catch(async (e) => {
     console.error(e);
     await prisma.$disconnect();

@@ -103,7 +103,7 @@ async function placeOrder({
       lastName: buyerLastName,
       vatId: buyerVatId,
       email: buyerEmail,
-      phone: buyerMobilePhone || null,
+      phone: buyerMobilePhone ?? null,
       type: buyerType,
     });
 
@@ -167,7 +167,7 @@ async function sendEmail(
     <p><b>Nome:</b> ${order.buyer.firstName} ${order.buyer.lastName}</p>
     <p><b>NIF:</b> ${order.buyer.vatId}</p>
     <p><b>Email:</b> ${order.buyer.email}</p>
-    <p><b>Telemóvel:</b> ${order.buyer.phone || ""}</p>
+    <p><b>Telemóvel:</b> ${order.buyer.phone ?? ""}</p>
     <p><b>Tipo de cliente:</b> ${order.buyer.type}</p>
     <table>
       <thead>
@@ -183,8 +183,8 @@ async function sendEmail(
         <tr>
           <td>${order.orderItems.at(0)?.product.name}</td>
           <td>${order.orderItems.at(0)?.size}</td>
-          <td>${order.orderItems.at(0)?.personalizedName || ""}</td>
-          <td>${order.orderItems.at(0)?.personalizedNumber || ""}</td>
+          <td>${order.orderItems.at(0)?.personalizedName ?? ""}</td>
+          <td>${order.orderItems.at(0)?.personalizedNumber ?? ""}</td>
           <td>${order.orderItems.at(0)?.quantity}</td>
         </tr>
       </tbody>
@@ -193,12 +193,8 @@ async function sendEmail(
 
   try {
     await sgMail.send(msg);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-
-    if (error?.response) {
-      console.error(error.response.body);
-    }
 
     throw new Error("Could not send email", { cause: "SENDGRID_ERROR" });
   }
@@ -216,7 +212,7 @@ async function sendEmail(
  */
 export async function POST(req: Request): Promise<NextResponse> {
   try {
-    const body = await req.json();
+    const body: unknown = await req.json();
     const placeOrderPayload = OrderValidator.parse(body);
 
     const order = await placeOrder(placeOrderPayload);
