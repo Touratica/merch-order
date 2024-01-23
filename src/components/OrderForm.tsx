@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "@/hooks/use-toast";
-import { OrderPlacementPayload, OrderValidator } from "@/lib/validators/order";
+import { PlaceOrderPayload, OrderValidator } from "@/lib/validators/order";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Order, Product } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
@@ -23,7 +23,7 @@ import { Separator } from "./ui/Separator";
 import Image from "next/image";
 
 export default function OrderForm({ products }: { products: Product[] }) {
-  const form = useForm<OrderPlacementPayload>({
+  const form = useForm<PlaceOrderPayload>({
     mode: "onBlur",
     resolver: zodResolver(OrderValidator),
     defaultValues: {
@@ -61,8 +61,8 @@ export default function OrderForm({ products }: { products: Product[] }) {
       productPersonalizedName,
       productPersonalizedNumber,
       productQuantity,
-    }: OrderPlacementPayload): Promise<Order> => {
-      const payload: OrderPlacementPayload = {
+    }: PlaceOrderPayload): Promise<Order> => {
+      const payload: PlaceOrderPayload = {
         buyerFirstName,
         buyerLastName,
         buyerVatId,

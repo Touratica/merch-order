@@ -57,4 +57,4 @@ export const OrderValidator = z.object({
     .min(1, { message: "A quantidade deve ser maior que 0." }),
 });
 
-export type OrderPlacementPayload = z.infer<typeof OrderValidator>;
+export type PlaceOrderPayload = z.infer<typeof OrderValidator>;

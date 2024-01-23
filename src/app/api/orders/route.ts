@@ -1,28 +1,43 @@
 import { prisma } from "@/lib/prisma";
-import { OrderValidator } from "@/lib/validators/order";
-import type { Buyer, Order, OrderItem, Product } from "@prisma/client";
+import { OrderValidator, type PlaceOrderPayload } from "@/lib/validators/order";
+import type {
+  Buyer,
+  Order,
+  OrderItem,
+  Prisma,
+  PrismaClient,
+  Product,
+} from "@prisma/client";
+import type { DefaultArgs } from "@prisma/client/runtime/library";
 import sgMail from "@sendgrid/mail";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 /**
  * Gets the buyer from the database or creates it if it doesn't exist. If the buyer exists but the phone number or type is different, it updates the phone number and type.
+ * @param {Omit<PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,"$on" | "$connect" | "$disconnect" | "$use" | "$transaction" | "$extends">} tx - Transaction client
  * @param {Pick<Buyer, "firstName" | "lastName" | "vatId" | "email" | "phone">} buyer - Buyer details
  * @returns {Promise<Buyer>} The buyer
  * @throws If the buyer could not be retrived/created/updated
  */
-async function getOrUpsertBuyer({
-  firstName,
-  lastName,
-  vatId,
-  email,
-  phone,
-  type,
-}: Pick<
-  Buyer,
-  "firstName" | "lastName" | "vatId" | "email" | "phone" | "type"
->): Promise<Buyer> {
-  const buyer = await prisma.buyer.findUnique({
+async function getOrUpsertBuyer(
+  tx: Omit<
+    PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+    "$on" | "$connect" | "$disconnect" | "$use" | "$transaction" | "$extends"
+  >,
+  {
+    firstName,
+    lastName,
+    vatId,
+    email,
+    phone,
+    type,
+  }: Pick<
+    Buyer,
+    "firstName" | "lastName" | "vatId" | "email" | "phone" | "type"
+  >,
+): Promise<Buyer> {
+  const buyer = await tx.buyer.findUnique({
     where: {
       firstName_lastName_vatId_email: {
         firstName,
@@ -34,7 +49,7 @@ async function getOrUpsertBuyer({
   });
 
   if (!buyer || buyer.phone !== phone || buyer.type !== type)
-    return await prisma.buyer.upsert({
+    return await tx.buyer.upsert({
       where: {
         firstName_lastName_vatId_email: {
           firstName,
@@ -58,6 +73,63 @@ async function getOrUpsertBuyer({
     });
 
   return buyer;
+}
+
+/**
+ * Creates an order in the database and sends an email to the store owner with the order details.
+ * @param {PlaceOrderPayload} placeOrderPayload - Order details
+ * @returns {Promise<Order & { orderItems: (OrderItem & { product: Product })[] } & { buyer: Buyer; }>} The order
+ */
+async function placeOrder({
+  buyerFirstName,
+  buyerLastName,
+  buyerVatId,
+  buyerEmail,
+  buyerMobilePhone,
+  buyerType,
+  productId,
+  productPersonalizedName,
+  productPersonalizedNumber,
+  productSize,
+  productQuantity,
+}: PlaceOrderPayload): Promise<
+  Order & { orderItems: (OrderItem & { product: Product })[] } & {
+    buyer: Buyer;
+  }
+> {
+  return await prisma.$transaction(async (tx) => {
+    const buyer = await getOrUpsertBuyer(tx, {
+      firstName: buyerFirstName,
+      lastName: buyerLastName,
+      vatId: buyerVatId,
+      email: buyerEmail,
+      phone: buyerMobilePhone || null,
+      type: buyerType,
+    });
+
+    const order = await tx.order.create({
+      data: {
+        buyerId: buyer.id,
+        orderItems: {
+          create: {
+            productId,
+            size: productSize,
+            personalizedName: productPersonalizedName,
+            personalizedNumber: productPersonalizedNumber,
+            quantity: productQuantity,
+          },
+        },
+      },
+      include: {
+        orderItems: { include: { product: true } },
+        buyer: true,
+      },
+    });
+
+    await sendEmail(order);
+
+    return order;
+  });
 }
 
 /**
@@ -145,49 +217,9 @@ async function sendEmail(
 export async function POST(req: Request): Promise<NextResponse> {
   try {
     const body = await req.json();
-    const {
-      buyerFirstName,
-      buyerLastName,
-      buyerVatId,
-      buyerEmail,
-      buyerMobilePhone,
-      buyerType,
-      productId,
-      productPersonalizedName,
-      productPersonalizedNumber,
-      productSize,
-      productQuantity,
-    } = OrderValidator.parse(body);
+    const placeOrderPayload = OrderValidator.parse(body);
 
-    let buyer = await getOrUpsertBuyer({
-      firstName: buyerFirstName,
-      lastName: buyerLastName,
-      vatId: buyerVatId,
-      email: buyerEmail,
-      phone: buyerMobilePhone || null,
-      type: buyerType,
-    });
-
-    const order = await prisma.order.create({
-      data: {
-        buyerId: buyer.id,
-        orderItems: {
-          create: {
-            productId,
-            size: productSize,
-            personalizedName: productPersonalizedName,
-            personalizedNumber: productPersonalizedNumber,
-            quantity: productQuantity,
-          },
-        },
-      },
-      include: {
-        orderItems: { include: { product: true } },
-        buyer: true,
-      },
-    });
-
-    await sendEmail(order);
+    const order = await placeOrder(placeOrderPayload);
 
     return new NextResponse<
       Order & { orderItems: (OrderItem & { product: Product })[] } & {
